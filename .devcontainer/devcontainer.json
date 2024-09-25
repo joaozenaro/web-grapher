@@ -1,0 +1,14 @@
+{
+    "name": "TS Vite",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "settings": {
+            "terminal.integrated.defaultProfile.linux": "bash",
+            "editor.defaultFormatter": "esbenp.prettier-vscode",
+            "editor.formatOnSave": true
+        }
+    },
+    "remoteUser": "vscode"
+}
