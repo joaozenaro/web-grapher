@@ -3,13 +3,104 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name=" viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Grapher</title>
-  <script type="module" crossorigin src="/web-grapher/assets/index-B5Qt9EMX.js"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+
+    <link rel="shortcut icon" href="/web-grapher/assets/favicon-CTbnZpmE.svg" type="image/x-icon">
+  <script type="module" crossorigin src="/web-grapher/assets/index-DrLVXVqA.js"></script>
+  <link rel="stylesheet" crossorigin href="/web-grapher/assets/index-CSG4JJAF.css">
 </head>
 
 <body>
-    <h1>Hello, world!</h1>
+    <aside>
+        <div x-data="shapesData">
+            <ul x-ref="shapelist">
+                <template x-for="(shape, index) in $store.shapes" :key="shape.id">
+                    <li>
+                        <div class="shape-list">
+                            <span class="shape-handle">
+                                <i class="hgi-stroke hgi-arrow-vertical"></i>
+                            </span>
+                            <input type="text" :value="shape.name" :readonly="!shape.showProperties"
+                                :style="!shape.showProperties ? 'outline: none; border: none; cursor: pointer;' : ''" />
+                            <button @click="shape.showProperties = !shape.showProperties">
+                                <i class="hgi-stroke hgi-sliders-vertical"></i>
+                            </button>
+                            <button @click="removeShape(shape.id)" class="danger">
+                                <i class="hgi-stroke hgi-sharp hgi-delete-02"></i>
+                            </button>
+                        </div>
+                        <template x-if="shape.showProperties">
+                            <div class="shape-properties">
+                                <div>
+                                    <div>
+                                        <label :id="'stroke-style-' + shape.id">Border Color</label>
+                                        <input type="color" x-model="shape.strokeStyle"
+                                            :id="'stroke-style-' + shape.id" />
+                                    </div>
+                                    <div>
+                                        <label :for="'fill-' + shape.id">Border Width</label>
+                                        <input type="number" x-model="shape.lineWidth" />
+                                    </div>
+                                    <div>
+                                        <label :for="'fill-' + shape.id">Fill</label>
+                                        <button class="remove-fill danger" @click="shape.fill = null">
+                                            <i class="hgi-stroke hgi-eraser-01"></i>
+                                        </button>
+                                        <input type="color" x-model="shape.fill" :id="'fill-' + shape.id" />
+                                    </div>
+                                    <div>
+                                        <label :for="'isClosed-' + shape.id">Closed</label>
+                                        <input type="checkbox" x-model="shape.closed" :id="'isClosed-' + shape.id" />
+                                    </div>
+                                </div>
+                                <ul class="vertex-list">
+                                    <template x-for="(vertex, vIndex) in shape.vertices" :key="vIndex">
+                                        <li>
+                                            <input type="number" x-model="vertex.x" placeholder="X" />
+                                            <input type="number" x-model="vertex.y" placeholder="Y" />
+                                            <button @click="removeVertex(index, vIndex)">
+                                                <i class="hgi-stroke hgi-eraser-01"></i>
+                                            </button>
+                                        </li>
+                                    </template>
+                                </ul>
+                                <button @click="addVertex(index)">Add Vertex</button>
+                            </div>
+                        </template>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </aside>
+    <main x-data="toolsData">
+        <div class="tools">
+            <input type="radio" value="Cursor" x-model="tool" />
+            <label for="line">(v) Pointer</label>
+            <i class="hgi-solid hgi-sharp hgi-cursor-02"></i>
+
+            <input type="radio" value="Pan" x-model="tool" />
+            <label for="pan">(space) Pan</label>
+            <i class="hgi-stroke hgi-four-finger-03"></i>
+
+            <input type="radio" value="Line" x-model="tool" />
+            <label for="line">(L)ine</label>
+            <i class="hgi-stroke hgi-pen-tool-add"></i>
+
+            <input type="radio" value="Shape" x-model="tool" />
+            <label for="shape">(S)hape</label>
+            <i class="hgi-stroke hgi-align-selection"></i>
+
+            <br />
+            <small style="color: gray; margin-left: 10px;">Pressione <code>esc</code> para finalizar a forma.</small>
+        </div>
+
+        <span id="mouse-coords">0x0</span>
+        <canvas @keyup.escape="endDrawing" @keyup.l="tool = 'Line'" @keyup.v="tool = 'Cursor'" @keyup.s="tool = 'Shape'"
+            @keydown.space="if (tool != 'Pan') previousTool = tool; tool = 'Pan'" @keyup.space="tool = previousTool"
+            tabindex="1"></canvas>
+    </main>
 </body>
 
 </html>
