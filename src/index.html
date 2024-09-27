@@ -7,7 +7,9 @@
     <title>Web Grapher</title>
     <link rel="stylesheet" href="style.css">
     <script type="module" src="main.ts" defer></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+
+    <link rel="shortcut icon" href="favicon.svg" type="image/x-icon">
 </head>
 
 <body>
@@ -18,15 +20,15 @@
                     <li>
                         <div class="shape-list">
                             <span class="shape-handle">
-                                <i class="bi bi-arrows-move"></i>
+                                <i class="hgi-stroke hgi-arrow-vertical"></i>
                             </span>
-                            <input type="text" :value="`Shape ${index+1}`" :readonly="!shape.showProperties"
+                            <input type="text" :value="shape.name" :readonly="!shape.showProperties"
                                 :style="!shape.showProperties ? 'outline: none; border: none; cursor: pointer;' : ''" />
                             <button @click="shape.showProperties = !shape.showProperties">
-                                <i class="bi bi-sliders2"></i>
+                                <i class="hgi-stroke hgi-sliders-vertical"></i>
                             </button>
                             <button @click="removeShape(shape.id)" class="danger">
-                                <i class="bi bi-trash"></i>
+                                <i class="hgi-stroke hgi-sharp hgi-delete-02"></i>
                             </button>
                         </div>
                         <template x-if="shape.showProperties">
@@ -39,12 +41,12 @@
                                     </div>
                                     <div>
                                         <label :for="'fill-' + shape.id">Border Width</label>
-                                        <input type="number" x-model="shape.lineWidth" @keyup="updateShape" />
+                                        <input type="number" x-model="shape.lineWidth" />
                                     </div>
                                     <div>
                                         <label :for="'fill-' + shape.id">Fill</label>
-                                        <button class="remove-fill danger" @click="shape.fill = ''">
-                                            <i class="bi bi-x-square"></i>
+                                        <button class="remove-fill danger" @click="shape.fill = null">
+                                            <i class="hgi-stroke hgi-eraser-01"></i>
                                         </button>
                                         <input type="color" x-model="shape.fill" :id="'fill-' + shape.id" />
                                     </div>
@@ -56,12 +58,10 @@
                                 <ul class="vertex-list">
                                     <template x-for="(vertex, vIndex) in shape.vertices" :key="vIndex">
                                         <li>
-                                            <input type="number" x-model="vertex.x" placeholder="X"
-                                                @keyup="updateShape" />
-                                            <input type="number" x-model="vertex.y" placeholder="Y"
-                                                @keyup="updateShape" />
+                                            <input type="number" x-model="vertex.x" placeholder="X" />
+                                            <input type="number" x-model="vertex.y" placeholder="Y" />
                                             <button @click="removeVertex(index, vIndex)">
-                                                <i class="bi bi-backspace"></i>
+                                                <i class="hgi-stroke hgi-eraser-01"></i>
                                             </button>
                                         </li>
                                     </template>
@@ -78,15 +78,19 @@
         <div class="tools">
             <input type="radio" value="Cursor" x-model="tool" />
             <label for="line">(v) Pointer</label>
-            <i class="bi bi-cursor"></i>
+            <i class="hgi-solid hgi-sharp hgi-cursor-02"></i>
+
+            <input type="radio" value="Pan" x-model="tool" />
+            <label for="pan">(space) Pan</label>
+            <i class="hgi-stroke hgi-four-finger-03"></i>
 
             <input type="radio" value="Line" x-model="tool" />
             <label for="line">(L)ine</label>
-            <i class="bi bi-vector-pen"></i>
+            <i class="hgi-stroke hgi-pen-tool-add"></i>
 
             <input type="radio" value="Shape" x-model="tool" />
             <label for="shape">(S)hape</label>
-            <i class="bi bi-bounding-box-circles"></i>
+            <i class="hgi-stroke hgi-align-selection"></i>
 
             <br />
             <small style="color: gray; margin-left: 10px;">Pressione <code>esc</code> para finalizar a forma.</small>
@@ -94,7 +98,8 @@
 
         <span id="mouse-coords">0x0</span>
         <canvas @keyup.escape="endDrawing" @keyup.l="tool = 'Line'" @keyup.v="tool = 'Cursor'" @keyup.s="tool = 'Shape'"
-            @click.outside="tool = 'Cursor'" tabindex="1"></canvas>
+            @keydown.space="if (tool != 'Pan') previousTool = tool; tool = 'Pan'" @keyup.space="tool = previousTool"
+            tabindex="1"></canvas>
     </main>
 </body>
 
