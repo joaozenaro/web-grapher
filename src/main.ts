@@ -2,29 +2,34 @@ import Alpine from 'alpinejs';
 import Sortable from 'sortablejs';
 import { Viewport } from './models/viewport';
 import { CanvasHandler } from './models/canvasHandler';
-import { Tool } from './types';
+import { Tool, Vertex } from './types';
+import { Shape } from './models/shape';
 
 const canvasElement = document.querySelector("canvas")!;
-const mouseCoordsElement = document.querySelector("#mouse-coords") as HTMLSpanElement;
 const viewportInstance = new Viewport();
 
-const canvasHandler = new CanvasHandler(canvasElement, mouseCoordsElement, viewportInstance);
+const canvasHandler = new CanvasHandler(canvasElement, viewportInstance);
 
 document.addEventListener("alpine:init", () => {
-    Alpine.store("shapes", []);
+    Alpine.store("shapes", [new Shape([{ x: 0, y: 0 } as Vertex])]);
     Alpine.data("toolsData", () => ({
         tool: "Cursor",
-        previousTool: "",
+        mouseCoords: "",
         init() {
             this.$watch('tool', (value: string) => {
                 canvasHandler.setSelectedTool(Tool[value]);
             });
+        },
+        mouseMove(e: MouseEvent) {
+            canvasHandler.handleMouseMove(e);
+            this.mouseCoords = JSON.stringify(viewportInstance.screenToWorld(canvasHandler.getMousePos(e)));
         },
         endDrawing() {
             canvasHandler.endDrawing();
         }
     }));
     Alpine.data("shapesData", () => ({
+        selectedShape: {},
         init() {
             Sortable.create(this.$refs.shapelist, {
                 animation: 150,
@@ -64,6 +69,27 @@ document.addEventListener("alpine:init", () => {
             const shapes = Alpine.store("shapes");
             Alpine.store("shapes", shapes.filter(x => x.id !== shapeId));
         },
+        rotateShape(shapeId: number, degrees: number) {
+            const shapes = Alpine.store("shapes");
+            const shape = shapes.find(x => x.id === shapeId);
+
+            shape.rotate();
+        },
+        changeScale(shapeId: number) {
+            const shapes = Alpine.store("shapes");
+            const shape = shapes.find(x => x.id === shapeId);
+            shape.changeScale();
+        },
+        moveShape(shapeId: number) {
+            const shapes = Alpine.store("shapes");
+            const shape: Shape = shapes.find(x => x.id === shapeId);
+
+            shape.translate.x = isNaN(Number(shape.translate.x)) ? 0 : Number(shape.translate.x);
+            shape.translate.y = isNaN(Number(shape.translate.y)) ? 0 : Number(shape.translate.y);
+            shape.move();
+
+            shape.translate = { x: 0, y: 0 };
+        }
     }));
 });
 

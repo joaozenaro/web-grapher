@@ -34,6 +34,37 @@
                         <template x-if="shape.showProperties">
                             <div class="shape-properties">
                                 <div>
+                                    <div x-show="shape.vertices.length == 1">
+                                        <label :id="'point-radius-' + shape.id">Point Size</label>
+                                        <input type="number" x-model="shape.pointRadius"
+                                            :id="'point-radius-' + shape.id">
+                                    </div>
+                                    <div>
+                                        <label :id="'scale-x-' + shape.id">Scale X</label>
+                                        <input type="number" x-model="shape.scale.x" :id="'scale-x-' + shape.id"
+                                            @change="changeScale(shape.id)">
+                                    </div>
+                                    <div>
+                                        <label :id="'scale-y-' + shape.id">Scale Y</label>
+                                        <input type="number" x-model="shape.scale.y" :id="'scale-y-' + shape.id"
+                                            @change="changeScale(shape.id)">
+                                    </div>
+                                    <div>
+                                        <label>Translate X & Y</label>
+                                        <input type="text" class="xy-translate" x-model="shape.translate.x">
+                                        <input type="text" class="xy-translate" x-model="shape.translate.y">
+                                        <button @click="moveShape(shape.id)">Go!</button>
+                                    </div>
+                                    <div>
+                                        <label :id="'scale-x-' + shape.id">Scale X</label>
+                                        <input type="number" x-model="shape.scale.x" :id="'scale-x-' + shape.id"
+                                            @change="changeScale(shape.id)">
+                                    </div>
+                                    <div>
+                                        <label :id="'scale-y-' + shape.id">Scale Y</label>
+                                        <input type="number" x-model="shape.scale.y" :id="'scale-y-' + shape.id"
+                                            @change="changeScale(shape.id)">
+                                    </div>
                                     <div>
                                         <label :id="'stroke-style-' + shape.id">Border Color</label>
                                         <input type="color" x-model="shape.strokeStyle"
@@ -41,7 +72,7 @@
                                     </div>
                                     <div>
                                         <label :for="'fill-' + shape.id">Border Width</label>
-                                        <input type="number" x-model="shape.lineWidth" />
+                                        <input type="number" x-model.number="shape.lineWidth" />
                                     </div>
                                     <div>
                                         <label :for="'fill-' + shape.id">Fill</label>
@@ -53,6 +84,13 @@
                                     <div>
                                         <label :for="'isClosed-' + shape.id">Closed</label>
                                         <input type="checkbox" x-model="shape.closed" :id="'isClosed-' + shape.id" />
+                                    </div>
+                                    <div>
+                                        <label>Rotate</label>
+                                        <input type="number" x-model="shape.rotation" value="0" min="-360" max="360"
+                                            @change="rotateShape(shape.id, shape.rotation)">
+                                        <input type="range" x-model="shape.rotation" value="0" min="-360" max="360"
+                                            step="1" @change="rotateShape(shape.id, shape.rotation)">
                                     </div>
                                 </div>
                                 <ul class="vertex-list">
@@ -96,10 +134,9 @@
             <small style="color: gray; margin-left: 10px;">Pressione <code>esc</code> para finalizar a forma.</small>
         </div>
 
-        <span id="mouse-coords">0x0</span>
+        <span class="mouse-coords" x-text="mouseCoords"></span>
         <canvas @keyup.escape="endDrawing" @keyup.l="tool = 'Line'" @keyup.v="tool = 'Cursor'" @keyup.s="tool = 'Shape'"
-            @keydown.space="if (tool != 'Pan') previousTool = tool; tool = 'Pan'" @keyup.space="tool = previousTool"
-            tabindex="1"></canvas>
+            @keyup.space="tool = 'Pan'" @mousemove="e => mouseMove(e)" tabindex="1"></canvas>
     </main>
 </body>
 

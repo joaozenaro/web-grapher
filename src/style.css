@@ -18,7 +18,8 @@ aside {
     overflow-y: auto;
 }
 
-input[type="number"] {
+input[type="number"],
+input[type="text"] {
     border: 1px solid #ccc;
     padding: 8px;
     font-size: 12px;
@@ -102,6 +103,10 @@ canvas {
     width: 30%;
 }
 
+.shape-properties>div>div input.xy-translate {
+    width: 20%;
+}
+
 .remove-fill {
     margin-left: auto;
     padding: 4px;
@@ -135,7 +140,7 @@ canvas {
     width: 100%;
 }
 
-#mouse-coords {
+.mouse-coords {
     color: darkgrey;
     user-select: none;
     position: absolute;

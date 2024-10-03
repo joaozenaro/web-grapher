@@ -12,20 +12,20 @@ export class Viewport {
     worldToScreen(point: Vertex): Vertex {
         return {
             x: (point.x - this.offset.x) * this.zoom,
-            y: (point.y - this.offset.y) * this.zoom
+            y: -(point.y - this.offset.y) * this.zoom
         };
     }
 
     screenToWorld(point: Vertex): Vertex {
         return {
             x: point.x / this.zoom + this.offset.x,
-            y: point.y / this.zoom + this.offset.y
+            y: -(point.y / this.zoom) + this.offset.y
         };
     }
 
     pan(dx: number, dy: number) {
         this.offset.x -= dx / this.zoom;
-        this.offset.y -= dy / this.zoom;
+        this.offset.y += dy / this.zoom;
     }
 
     zoomTo(factor: number, center: Vertex) {
@@ -34,6 +34,6 @@ export class Viewport {
 
         const newScreenCenter = this.worldToScreen(worldCenter);
         this.offset.x += (newScreenCenter.x - center.x) / this.zoom;
-        this.offset.y += (newScreenCenter.y - center.y) / this.zoom;
+        this.offset.y -= (newScreenCenter.y - center.y) / this.zoom;
     }
 }
