@@ -4,6 +4,9 @@ import { Viewport } from './models/viewport';
 import { CanvasHandler } from './models/canvasHandler';
 import { Tool, Vertex } from './types';
 import { Shape } from './models/shape';
+import { testarMatriz } from './matrix';
+
+testarMatriz();
 
 const canvasElement = document.querySelector("canvas")!;
 const viewportInstance = new Viewport();
