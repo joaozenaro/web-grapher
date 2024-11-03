@@ -4,7 +4,7 @@ import { Viewport } from './models/viewport';
 import { CanvasHandler } from './models/canvasHandler';
 import { Tool, Vertex } from './types';
 import { Shape } from './models/shape';
-import { testarMatriz } from './matrix';
+import { testarMatriz } from './models/matriz';
 
 testarMatriz();
 
@@ -80,8 +80,14 @@ document.addEventListener("alpine:init", () => {
         },
         changeScale(shapeId: number) {
             const shapes = Alpine.store("shapes");
-            const shape = shapes.find(x => x.id === shapeId);
+            const shape: Shape = shapes.find(x => x.id === shapeId);
+
+            shape.scale.x = isNaN(Number(shape.scale.x)) ? 0 : Number(shape.scale.x);
+            shape.scale.y = isNaN(Number(shape.scale.y)) ? 0 : Number(shape.scale.y);
             shape.changeScale();
+
+            shape.scale = { x: 1, y: 1 };
+
         },
         moveShape(shapeId: number) {
             const shapes = Alpine.store("shapes");

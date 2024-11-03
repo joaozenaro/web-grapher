@@ -1,4 +1,4 @@
-class Matriz {
+export class Matriz {
     private dados: number[][];
     private linhas: number;
     private colunas: number;
@@ -62,6 +62,39 @@ class Matriz {
                 this.dados[i][j] = valores[i][j];
             }
         }
+    }
+
+    static criarMatrizTranslacao(dx: number, dy: number): Matriz {
+        const matriz = new Matriz(3, 3);
+        matriz.preencher([
+            [1, 0, dx],
+            [0, 1, dy],
+            [0, 0, 1]
+        ]);
+        return matriz;
+    }
+
+    static criarMatrizRotacao(angulo: number): Matriz {
+        const rad = (angulo * Math.PI) / 180;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+        const matriz = new Matriz(3, 3);
+        matriz.preencher([
+            [cos, -sin, 0],
+            [sin, cos, 0],
+            [0, 0, 1]
+        ]);
+        return matriz;
+    }
+
+    static criarMatrizEscala(sx: number, sy: number): Matriz {
+        const matriz = new Matriz(3, 3);
+        matriz.preencher([
+            [sx, 0, 0],
+            [0, sy, 0],
+            [0, 0, 1]
+        ]);
+        return matriz;
     }
 
     imprimir(): void {
