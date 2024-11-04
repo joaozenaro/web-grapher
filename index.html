@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
 
     <link rel="shortcut icon" href="/web-grapher/assets/favicon-CTbnZpmE.svg" type="image/x-icon">
-  <script type="module" crossorigin src="/web-grapher/assets/index-K4n4XvJV.js"></script>
+  <script type="module" crossorigin src="/web-grapher/assets/index-K7Z4WuhP.js"></script>
   <link rel="stylesheet" crossorigin href="/web-grapher/assets/index-Bsyj8fLd.css">
 </head>
 
@@ -40,14 +40,19 @@
                                             :id="'point-radius-' + shape.id">
                                     </div>
                                     <div>
-                                        <label :id="'scale-x-' + shape.id">Scale X</label>
-                                        <input type="number" x-model="shape.scale.x" :id="'scale-x-' + shape.id"
-                                            @change="changeScale(shape.id)">
+                                        <input type="radio" value="0" x-model="shape.transformOrigin" />
+                                        <label for="shapeCenter">Shape Center</label>
+
+                                        <input type="radio" value="1" x-model="shape.transformOrigin" />
+                                        <label for="origin">Origin</label>
+
+                                        <input type="radio" value="2" x-model="shape.transformOrigin" />
+                                        <label for="custom">Custom</label>
                                     </div>
-                                    <div>
-                                        <label :id="'scale-y-' + shape.id">Scale Y</label>
-                                        <input type="number" x-model="shape.scale.y" :id="'scale-y-' + shape.id"
-                                            @change="changeScale(shape.id)">
+                                    <div x-show="shape.transformOrigin == 2">
+                                        <label>Custom Transform X & Y</label>
+                                        <input type="text" class="xy-translate" x-model="shape.customTransformPoint.x">
+                                        <input type="text" class="xy-translate" x-model="shape.customTransformPoint.y">
                                     </div>
                                     <div>
                                         <label>Translate X & Y</label>
@@ -56,14 +61,10 @@
                                         <button @click="moveShape(shape.id)">Go!</button>
                                     </div>
                                     <div>
-                                        <label :id="'scale-x-' + shape.id">Scale X</label>
-                                        <input type="number" x-model="shape.scale.x" :id="'scale-x-' + shape.id"
-                                            @change="changeScale(shape.id)">
-                                    </div>
-                                    <div>
-                                        <label :id="'scale-y-' + shape.id">Scale Y</label>
-                                        <input type="number" x-model="shape.scale.y" :id="'scale-y-' + shape.id"
-                                            @change="changeScale(shape.id)">
+                                        <label>Scale X & Y</label>
+                                        <input type="text" class="xy-translate" x-model="shape.scale.x">
+                                        <input type="text" class="xy-translate" x-model="shape.scale.y">
+                                        <button @click="changeScale(shape.id)">Go!</button>
                                     </div>
                                     <div>
                                         <label :id="'stroke-style-' + shape.id">Border Color</label>
